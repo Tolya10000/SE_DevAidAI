@@ -9,6 +9,7 @@ function main() {
     do
        grep "${i}" $parentDir/tmp.file > /dev/null || pip install "${i}"
     done
+    rm -f $parentDir/tmp.file
     uvicorn app:app --host 0.0.0.0 --port 8080
 }
 
