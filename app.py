@@ -1,11 +1,27 @@
 import torch
 from transformers import BertForSequenceClassification, AutoTokenizer
+from fastapi import FastAPI
+from starlette.status import HTTP_200_OK
+from pydantic import BaseModel
 
-import streamlit as st
-
+app = FastAPI()
 LABELS = ['neutral', 'happiness', 'sadness', 'enthusiasm', 'fear', 'anger', 'disgust']
 tokenizer = AutoTokenizer.from_pretrained('Aniemore/rubert-tiny2-russian-emotion-detection')
 model = BertForSequenceClassification.from_pretrained('Aniemore/rubert-tiny2-russian-emotion-detection')
+
+
+class InputModel(BaseModel):
+    text: str
+
+
+class ResponseModel(BaseModel):
+    neutral: float
+    happiness: float
+    sadness: float
+    enthusiasm: float
+    fear: float
+    anger: float
+    disgust: float
 
 
 def predict_emotion(text: str) -> str:
@@ -27,12 +43,11 @@ def predict_emotions(text: str) -> dict:
     return emotions_list
 
 
-if __name__ == '__main__':
-    with st.chat_message('assistant'):
-        st.write('Привет, пиши предложение и я оценю выраженные эмоции')
-    prompt = st.chat_input('Input')
-    if prompt:
-        with st.chat_message('assistant'):
-            result = predict_emotions(prompt)
-            st.write('Ваше предложение имеет следующие эмоции')
-            st.write(result)
+@app.post(
+    '/estimate',
+    operation_id='estimate_text',
+    status_code=HTTP_200_OK,
+    response_model=ResponseModel
+)
+def estimate_text(body: InputModel):
+    return ResponseModel(**predict_emotions(body.text))
