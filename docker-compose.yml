@@ -1,0 +1,10 @@
+version: '2.1'
+
+services:
+  streamlit_service:
+    container_name: streamlit_service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 1460:1460
