@@ -2,3 +2,4 @@ transformers
 accelerate
 safetensors
 streamlit
+pytest
