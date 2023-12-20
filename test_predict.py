@@ -1,9 +1,19 @@
+import os
 import unittest
 from app import predict_emotion, predict_emotions
+from threading import Thread
+from time import sleep
+from requests.api import get
+
+t = Thread(target=os.system, args=('streamlit run app.py --server.port 1460',))
+t.daemon = True
+t.start()
+sleep(5)
 
 
 class TestApi(unittest.TestCase):
     def setUp(self):
+
         self.predict_data = {
             'Привет!': 'happiness',
             'Ненавижу выходить на улицу в дождь!!!': 'anger',
@@ -24,6 +34,9 @@ class TestApi(unittest.TestCase):
 
     def test_keys_predict(self):
         assert sorted(predict_emotions('Тест').keys()) == sorted(self.predict_data.values())
+
+    def test_api(self):
+        assert get('http://127.0.0.1:1460').status_code == 200
 
 
 if __name__ == '__main__':
