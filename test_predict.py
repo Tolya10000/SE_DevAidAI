@@ -5,11 +5,6 @@ from threading import Thread
 from time import sleep
 from requests.api import get
 
-t = Thread(target=os.system, args=('streamlit run app.py --server.port 1460',))
-t.daemon = True
-t.start()
-sleep(5)
-
 
 class TestApi(unittest.TestCase):
     def setUp(self):
@@ -36,6 +31,10 @@ class TestApi(unittest.TestCase):
         assert sorted(predict_emotions('Тест').keys()) == sorted(self.predict_data.values())
 
     def test_api(self):
+        t = Thread(target=os.system, args=('streamlit run app.py --server.port 1460',))
+        t.daemon = True
+        t.start()
+        sleep(5)
         assert get('http://127.0.0.1:1460').status_code == 200
 
 

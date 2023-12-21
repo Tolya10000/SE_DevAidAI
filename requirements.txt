@@ -1,5 +1,0 @@
-transformers
-accelerate
-safetensors
-streamlit
-torch

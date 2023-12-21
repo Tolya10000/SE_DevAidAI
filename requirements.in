@@ -3,3 +3,4 @@ accelerate
 safetensors
 streamlit
 pytest
+requests
