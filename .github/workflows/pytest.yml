@@ -1,4 +1,4 @@
-name: Pylint
+name: Pytest
 
 on: [push]
 
@@ -20,4 +20,4 @@ jobs:
         pip install -r requirements.in
     - name: Pylint
       run: |
-        pylint $(git ls-files 'test_.py')
+        pytest -v
